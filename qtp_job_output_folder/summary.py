@@ -74,7 +74,8 @@ def generate_html_summary(qclient, job_id, parameters, out_dir):
     artifact_info = qclient.get(qclient_url)
 
     # [0] there is only one directory
-    folder = artifact_info['files']['directory'][0]['filepath']
+    folder = qclient.fetch_file_from_central(
+        artifact_info['files']['directory'][0]['filepath'])
 
     # 2. Generate summary
     index_fp, viz_fp = _generate_html_summary(job_id, folder, out_dir)
@@ -83,7 +84,9 @@ def generate_html_summary(qclient, job_id, parameters, out_dir):
     success = True
     error_msg = ''
     try:
-        fps = dumps({'html': index_fp, 'dir': viz_fp})
+        fps = dumps({'html': qclient.push_file_to_central(index_fp),
+                     'dir': qclient.push_file_to_central(viz_fp) \
+                        if viz_fp is not None else None})
         qclient.patch(qclient_url, 'add', '/html_summary/', value=fps)
     except Exception as e:
         success = False

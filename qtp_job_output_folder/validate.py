@@ -40,7 +40,7 @@ def validate(qclient, job_id, parameters, out_dir):
 
     files = loads(parameters['files'])
     # [0] we only expect one directory
-    folder = files['directory'][0]
+    folder = qclient.fetch_file_from_central(files['directory'][0])
 
     success = False
     ainfo = None
@@ -55,8 +55,10 @@ def validate(qclient, job_id, parameters, out_dir):
 
         # let's generate the summary so it's ready to be displayed
         index_fp, viz_fp = _generate_html_summary(job_id, folder, out_dir)
+        qclient.push_file_to_central(index_fp)
         filepaths.append((index_fp, 'html_summary'))
         if viz_fp is not None:
+            qclient.qclient.push_file_to_central(viz_fp)
             filepaths.append((viz_fp, 'html_summary_dir'))
 
         ainfo = [ArtifactInfo(None, 'job-output-folder', filepaths)]
