@@ -68,7 +68,7 @@ class PluginTests(PluginTestCase):
                 'status': 'running'}
         job_id = self.qclient.post(
             '/apitest/processing_job/', data=data)['job']
-        plugin("https://tinqiita-qiita-1:21174", job_id, self.out_dir)
+        plugin("https://localhost:21174", job_id, self.out_dir)
         fp_target_dir = '%s/%s' % (self.source_dir.split(
             '/%s/' % self.mountpoint)[0], atype)
         self._clean_up_remote_files.append(fp_target_dir)
@@ -92,7 +92,7 @@ class PluginTests(PluginTestCase):
             'status': 'running'}
         job_id = self.qclient.post(
             '/apitest/processing_job/', data=data)['job']
-        plugin("https://tinqiita-qiita-1:21174", job_id, self.out_dir)
+        plugin("https://localhost:21174", job_id, self.out_dir)
         fp_target_dir = '%s/%s' % (self.source_dir.split(
             '/%s/' % self.mountpoint)[0], atype)
         self._clean_up_remote_files.append(fp_target_dir)
@@ -107,7 +107,7 @@ class PluginTests(PluginTestCase):
         data['parameters'] = dumps(parameters)
         job_id = self.qclient.post(
             '/apitest/processing_job/', data=data)['job']
-        plugin("https://tinqiita-qiita-1:21174", job_id, self.out_dir)
+        plugin("https://localhost:21174", job_id, self.out_dir)
         self._wait_job(job_id)
         obs = self.qclient.get_job_info(job_id)
         self.assertEqual(obs['status'], 'error')
