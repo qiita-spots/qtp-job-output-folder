@@ -28,7 +28,7 @@ class SummaryTests(PluginTestCase):
         # fail otherwise. To avoid collisions, a mid-level directory name is
         # a random string (= _get_candidate_names())
         self.mountpoint = 'job'
-         # only adapt filepaths
+        # only adapt filepaths
         self.exp_dirname = '2_test_folder'
         self.source_dir = self.deposite_in_qiita_basedir(
             join(self.mountpoint, self.exp_dirname), True)
