@@ -16,7 +16,7 @@ def _folder_listing(folder):
     for f in glob(f'{folder}/*'):
         if isdir(f):
             results.append(('folder', f))
-            results.extend(_folder_listing(f'{f}/*'))
+            results.extend(_folder_listing(f))
         else:
             results.append(('file', f))
     return results
