@@ -74,8 +74,7 @@ def generate_html_summary(qclient, job_id, parameters, out_dir):
     artifact_info = qclient.get(qclient_url)
 
     # [0] there is only one directory
-    folder = qclient.fetch_file_from_central(
-        artifact_info['files']['directory'][0]['filepath'])
+    folder = artifact_info['files']['directory'][0]['filepath']
 
     # 2. Generate summary
     index_fp, viz_fp = _generate_html_summary(job_id, folder, out_dir)
