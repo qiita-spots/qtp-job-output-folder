@@ -84,9 +84,7 @@ def generate_html_summary(qclient, job_id, parameters, out_dir):
     success = True
     error_msg = ''
     try:
-        fps = dumps({'html': index_fp,
-                     'dir': viz_fp
-                     if viz_fp is not None else None})
+        fps = dumps({'html': index_fp, 'dir': viz_fp})
         qclient.patch(qclient_url, 'add', '/html_summary/', value=fps)
     except Exception as e:
         success = False
