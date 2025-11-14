@@ -40,7 +40,7 @@ def validate(qclient, job_id, parameters, out_dir):
 
     files = loads(parameters['files'])
     # [0] we only expect one directory
-    folder = qclient.fetch_file_from_central(files['directory'][0])
+    folder = files['directory'][0]
 
     success = False
     ainfo = None
