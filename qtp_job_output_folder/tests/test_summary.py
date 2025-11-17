@@ -30,8 +30,8 @@ class SummaryTests(PluginTestCase):
         self.mountpoint = 'job'
         # only adapt filepaths
         self.exp_dirname = '2_test_folder'
-        self.source_dir = self.deposite_in_qiita_basedir(
-            join(self.mountpoint, self.exp_dirname), True)
+        self.source_dir = join(self.base_data_dir, self.mountpoint,
+                               self.exp_dirname)
         source = join(dirname(abspath(getfile(currentframe()))), 'test_data')
         copytree(source, self.source_dir)
         self.qclient.push_file_to_central(self.source_dir)

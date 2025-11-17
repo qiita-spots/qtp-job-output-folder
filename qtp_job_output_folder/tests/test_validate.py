@@ -29,8 +29,8 @@ class ValidateTests(PluginTestCase):
         # that exists in Qiita DB as 'directory' as fetching via https will
         # fail otherwise
         self.mountpoint = 'job'
-        self.source_dir = self.deposite_in_qiita_basedir(
-            join(self.mountpoint, '2_test_folder'), True)
+        self.source_dir = join(self.base_data_dir, self.mountpoint,
+                               '2_test_folder')
         source = join(dirname(abspath(getfile(currentframe()))), 'test_data')
         copytree(source, self.source_dir)
         self.qclient.push_file_to_central(self.source_dir)
