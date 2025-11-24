@@ -17,6 +17,9 @@ def _folder_listing(folder):
     # and index.html at any level
     separator = "|--"
     for dpath, _, files in walk(folder):
+        # assuring same order, mainly for testing
+        files.sort()
+
         # if we are at the top, we should add
         # all files
         if dpath == folder:
