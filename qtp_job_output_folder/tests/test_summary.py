@@ -78,6 +78,13 @@ class SummaryTests(PluginTestCase):
         with open(html_fp) as html_f:
             html = html_f.read()
 
+        print("-------------")
+        print("-------------")
+        print(html)
+        print("-------------")
+        print(EXP_HTML.format(aid=aid))
+        print("-------------")
+        print("-------------")
         self.assertEqual(html, EXP_HTML.format(aid=aid))
 
         # verifying the new MANIFEST.txt
