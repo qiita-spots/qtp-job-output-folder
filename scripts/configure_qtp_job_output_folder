@@ -14,15 +14,18 @@ from qtp_job_output_folder import plugin
 
 
 @click.command()
-@click.option('--env-script', prompt='Environment script',
-              default='conda activate qtp-job-output-folder')
-@click.option('--ca-cert', prompt='Server certificate', default='None')
+@click.option(
+    "--env-script",
+    prompt="Environment script",
+    default="conda activate qtp-job-output-folder",
+)
+@click.option("--ca-cert", prompt="Server certificate", default="None")
 def config(env_script, ca_cert):
     """Generates the Qiita configuration files"""
-    if ca_cert == 'None':
+    if ca_cert == "None":
         ca_cert = None
-    plugin.generate_config(env_script, 'start_qtp_job_output_folder', ca_cert)
+    plugin.generate_config(env_script, "start_qtp_job_output_folder", ca_cert)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     config()
