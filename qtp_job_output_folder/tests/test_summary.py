@@ -23,7 +23,7 @@ from qtp_job_output_folder.summary import generate_html_summary
 class SummaryTests(PluginTestCase):
     def setUp(self):
         self.out_dir = mkdtemp()
-        self.source_dir = join(mkdtemp(), "test_data")
+        self.source_dir = join(mkdtemp(), "result")
         source = join(dirname(abspath(getfile(currentframe()))), "test_data")
         copytree(source, self.source_dir)
         self._clean_up_files = [self.out_dir]
@@ -53,8 +53,7 @@ class SummaryTests(PluginTestCase):
             "parameters": dumps(parameters),
             "status": "running",
         }
-        url = "/apitest/processing_job/"
-        job_id = self.qclient.post(url, data=data)["job"]
+        job_id = self.qclient.post("/apitest/processing_job/", data=data)["job"]
 
         # Run the test
         obs_success, obs_ainfo, obs_error = generate_html_summary(
@@ -78,13 +77,6 @@ class SummaryTests(PluginTestCase):
         with open(html_fp) as html_f:
             html = html_f.read()
 
-        print("-------------")
-        print("-------------")
-        print(html)
-        print("-------------")
-        print(EXP_HTML.format(aid=aid))
-        print("-------------")
-        print("-------------")
         self.assertEqual(html, EXP_HTML.format(aid=aid))
 
         # verifying the new MANIFEST.txt
@@ -96,19 +88,19 @@ class SummaryTests(PluginTestCase):
 
 
 EXP_HTML = (
-    '<a href="./{aid}/test_data/MANIFEST.txt" type="file" target="_blank">'
-    "test_data/MANIFEST.txt</a><br/>\n"
-    '<a href="./{aid}/test_data/file_1" type="file" target="_blank">'
-    "test_data/file_1</a><br/>\n"
-    '<a href="./{aid}/test_data/file_2" type="file" target="_blank">'
-    "test_data/file_2</a><br/>\n"
-    '<a href="./{aid}/test_data/folder_a/folder_b/index.html" type="file" '
-    'target="_blank">test_data/folder_a/folder_b/index.html</a><br/>\n'
-    '<a href="./{aid}/test_data/folder_1/index.html" type="file" '
-    'target="_blank">test_data/folder_1/index.html</a>'
+    '<a href="./{aid}/result/MANIFEST.txt" type="file" target="_blank">'
+    "result/MANIFEST.txt</a><br/>\n"
+    '<a href="./{aid}/result/file_1" type="file" target="_blank">'
+    "result/file_1</a><br/>\n"
+    '<a href="./{aid}/result/file_2" type="file" target="_blank">'
+    "result/file_2</a><br/>\n"
+    '<a href="./{aid}/result/folder_a/folder_b/index.html" type="file" '
+    'target="_blank">result/folder_a/folder_b/index.html</a><br/>\n'
+    '<a href="./{aid}/result/folder_1/index.html" type="file" '
+    'target="_blank">result/folder_1/index.html</a>'
 )
 EXP_MANIFEST = [
-    " test_data/\n",
+    " result/\n",
     "|-- file_1\n",
     "|-- file_2\n",
     "|-- folder_a/\n",

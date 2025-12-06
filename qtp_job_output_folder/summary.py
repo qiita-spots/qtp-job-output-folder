@@ -56,10 +56,7 @@ def _generate_html_summary(jid, folder, out_dir):
 
         links = [link % (manifest_fp[tlink:], "file", manifest_fp[tname:])]
         for ft, f in index:
-            # to avoid any duplication of lines:
-            _link = link % (f[tlink:], ft, f[tname:])
-            if _link not in links:
-                links.append(_link)
+            links.append(link % (f[tlink:], ft, f[tname:]))
 
         summary = "<br/>\n".join(links)
 
