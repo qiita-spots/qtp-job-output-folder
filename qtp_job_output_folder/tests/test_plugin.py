@@ -102,7 +102,7 @@ class PluginTests(PluginTestCase):
         self.assertEqual(obs['status'], 'success')
 
         # test failure
-        files = {'directory': [join(self.base_data_dir, '/do/not/exits')]}
+        files = {'directory': [join(self.base_data_dir, 'do/not/exits')]}
         parameters['files'] = dumps(files)
         data['parameters'] = dumps(parameters)
         job_id = self.qclient.post(
