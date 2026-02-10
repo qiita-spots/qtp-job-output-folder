@@ -61,8 +61,6 @@ class PluginTests(PluginTestCase):
         atype = 'job-output-folder'
         data = {'filepaths': dumps(files), 'type': atype,
                 'name': "A name", 'data_type': 'Job Output Folder'}
-        from glob import glob
-        print("MAXI data=%s, files=%s" % (data, glob("/qiita_data/**/*", recursive=True)))
         aid = self.qclient.post('/apitest/artifact/', data=data)['artifact']
         data = {'command': dumps(['qtp-job-output-folder', __version__,
                                   'Generate HTML summary']),
@@ -70,7 +68,7 @@ class PluginTests(PluginTestCase):
                 'status': 'running'}
         job_id = self.qclient.post(
             '/apitest/processing_job/', data=data)['job']
-        plugin("https://tinqiita-qiita-1:21174", job_id, self.out_dir)
+        plugin("https://localhost:21174", job_id, self.out_dir)
         fp_target_dir = '%s/%s' % (self.source_dir.split(
             '/%s/' % self.mountpoint)[0], atype)
         self._clean_up_remote_files.append(fp_target_dir)
@@ -94,15 +92,13 @@ class PluginTests(PluginTestCase):
             'status': 'running'}
         job_id = self.qclient.post(
             '/apitest/processing_job/', data=data)['job']
-        plugin("https://tinqiita-qiita-1:21174", job_id, self.out_dir)
+        plugin("https://localhost:21174", job_id, self.out_dir)
         fp_target_dir = '%s/%s' % (self.source_dir.split(
             '/%s/' % self.mountpoint)[0], atype)
         self._clean_up_remote_files.append(fp_target_dir)
         self._clean_up_files.append(fp_target_dir)
         self._wait_job(job_id)
         obs = self.qclient.get_job_info(job_id)
-        import sys
-        print("STEFAN obs=%s" % obs, file=sys.stderr)
         self.assertEqual(obs['status'], 'success')
 
         # test failure
@@ -111,7 +107,7 @@ class PluginTests(PluginTestCase):
         data['parameters'] = dumps(parameters)
         job_id = self.qclient.post(
             '/apitest/processing_job/', data=data)['job']
-        plugin("https://tinqiita-qiita-1:21174", job_id, self.out_dir)
+        plugin("https://localhost:21174", job_id, self.out_dir)
         self._wait_job(job_id)
         obs = self.qclient.get_job_info(job_id)
         self.assertEqual(obs['status'], 'error')

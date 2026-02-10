@@ -65,12 +65,9 @@ class ValidateTests(PluginTestCase):
         obs_success, obs_ainfo, obs_error = validate(
             self.qclient, job_id, parameters, self.out_dir)
         for suffix in [atype, self.mountpoint]:
-            import sys
-            print("STEFAN atype=%s, self.mountpoint=%s, self.source_dir=%s" % (atype, self.mountpoint, self.source_dir), file=sys.stderr)
             self._clean_up_remote_files.append(
                 '%s/%s' % (self.source_dir.split('/%s/' % self.mountpoint)[0],
                            suffix))
-        print("STEFAN ende: %s\n" % self._clean_up_remote_files)
         self.assertTrue(obs_success)
         filepaths = [
             (f'{self.source_dir}', 'directory'),
