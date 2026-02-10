@@ -36,7 +36,7 @@ class SummaryTests(PluginTestCase):
         copytree(source, self.source_dir)
         self.qclient.push_file_to_central(self.source_dir)
         self._clean_up_files = [self.out_dir, dirname(self.source_dir)]
-        self._clean_up_remote_files = []
+        #self._clean_up_remote_files = []
 
     def tearDown(self):
         for fp in self._clean_up_files:
@@ -45,8 +45,8 @@ class SummaryTests(PluginTestCase):
                     rmtree(fp)
                 else:
                     remove(fp)
-        for fp in self._clean_up_remote_files:
-            self.qclient.delete_file_from_central(fp)
+        #for fp in self._clean_up_remote_files:
+        #    self.qclient.delete_file_from_central(fp)
 
     def test_summary(self):
         files = [(self.source_dir, 'directory')]
@@ -67,7 +67,7 @@ class SummaryTests(PluginTestCase):
             self.qclient, job_id, parameters, self.out_dir)
         fp_target_dir = '%s/%s' % (self.source_dir.split(
             '/%s/' % self.mountpoint)[0], atype)
-        self._clean_up_remote_files.append(fp_target_dir)
+        #self._clean_up_remote_files.append(fp_target_dir)
         self._clean_up_files.append(fp_target_dir)
 
         # asserting reply

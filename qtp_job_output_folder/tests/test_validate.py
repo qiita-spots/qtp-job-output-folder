@@ -35,7 +35,7 @@ class ValidateTests(PluginTestCase):
         copytree(source, self.source_dir)
         self.qclient.push_file_to_central(self.source_dir)
         self._clean_up_files = [self.out_dir, dirname(self.source_dir)]
-        self._clean_up_remote_files = []
+        #self._clean_up_remote_files = []
 
     def tearDown(self):
         for fp in self._clean_up_files:
@@ -44,8 +44,8 @@ class ValidateTests(PluginTestCase):
                     rmtree(fp)
                 else:
                     remove(fp)
-        for fp in self._clean_up_remote_files:
-            self.qclient.delete_file_from_central(fp)
+        #for fp in self._clean_up_remote_files:
+        #    self.qclient.delete_file_from_central(fp)
 
     def test_validate(self):
         files = {'directory': [self.source_dir]}
@@ -64,10 +64,10 @@ class ValidateTests(PluginTestCase):
 
         obs_success, obs_ainfo, obs_error = validate(
             self.qclient, job_id, parameters, self.out_dir)
-        for suffix in [atype, self.mountpoint]:
-            self._clean_up_remote_files.append(
-                '%s/%s' % (self.source_dir.split('/%s/' % self.mountpoint)[0],
-                           suffix))
+        #for suffix in [atype, self.mountpoint]:
+        #    self._clean_up_remote_files.append(
+        #        '%s/%s' % (self.source_dir.split('/%s/' % self.mountpoint)[0],
+        #                   suffix))
         self.assertTrue(obs_success)
         filepaths = [
             (f'{self.source_dir}', 'directory'),
