@@ -6,37 +6,60 @@
 # The full license is in the file LICENSE, distributed with this software.
 # -----------------------------------------------------------------------------
 
-from glob import glob
 from json import dumps
-from os.path import dirname, exists, isdir, join
+from os import sep, walk
+from os.path import basename, dirname, exists, isdir, join
 
 
 def _folder_listing(folder):
-    results = []
-    for f in glob(f"{folder}/*"):
-        if isdir(f):
-            results.append(("folder", f))
-            results.extend(_folder_listing(f"{f}/*"))
-        else:
-            results.append(("file", f))
-    return results
+    index, manifest = [], []
+    # only adding main files on top directory
+    # and index.html at any level
+    separator = "|--"
+    for dpath, _, files in walk(folder):
+        # assuring same order, mainly for testing
+        files.sort()
+
+        # if we are at the top, we should add
+        # all files
+        if dpath == folder:
+            for f in files:
+                index.append(("file", f"{dpath}/{f}"))
+        # if we are not at the top, we should only add
+        # the index.html files
+        elif "index.html" in files:
+            index.append(("file", f"{dpath}/index.html"))
+
+        depth = dpath.replace(folder, "").count(sep)
+        space = separator * depth
+        manifest.append(f"{space} {basename(dpath)}/")
+        for filename in files:
+            manifest.append(f"{space}{separator} {filename}")
+
+    return index, manifest
 
 
 def _generate_html_summary(jid, folder, out_dir):
     summary = f"<h3><b>{folder}</b> does not exist.</h3>"
+    manifest_fp = join(folder, "MANIFEST.txt")
+    index_fp = join(out_dir, "summary.html")
 
     if exists(folder) and isdir(folder):
         # calculating the "trimming" for the fullpaths, +1 is to remove /
         tname = len(dirname(folder)) + 1
         tlink = len(dirname(dirname(folder)))
-        summary = "<br/>\n".join(
-            [
-                f'<a href=".{f[tlink:]}" type="{ft}" target="_blank">{f[tname:]}</a>'
-                for ft, f in _folder_listing(folder)
-            ]
-        )
+        link = '<a href=".%s" type="%s" target="_blank">%s</a>'
+        index, manifest = _folder_listing(folder)
 
-    index_fp = join(out_dir, "summary.html")
+        with open(manifest_fp, "w") as of:
+            of.write("\n".join(manifest))
+
+        links = [link % (manifest_fp[tlink:], "file", manifest_fp[tname:])]
+        for ft, f in index:
+            links.append(link % (f[tlink:], ft, f[tname:]))
+
+        summary = "<br/>\n".join(links)
+
     with open(index_fp, "w") as of:
         of.write(summary)
 

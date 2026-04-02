@@ -23,7 +23,7 @@ from qtp_job_output_folder.summary import generate_html_summary
 class SummaryTests(PluginTestCase):
     def setUp(self):
         self.out_dir = mkdtemp()
-        self.source_dir = join(mkdtemp(), "test_data")
+        self.source_dir = join(mkdtemp(), "result")
         source = join(dirname(abspath(getfile(currentframe()))), "test_data")
         copytree(source, self.source_dir)
         self._clean_up_files = [self.out_dir]
@@ -77,31 +77,41 @@ class SummaryTests(PluginTestCase):
         with open(html_fp) as html_f:
             html = html_f.read()
 
-        self.assertCountEqual(
-            sorted(html.replace("<br/>", "").split("\n")),
-            sorted(EXP_HTML.format(aid=aid).replace("<br/>", "").split("\n")),
-        )
+        self.assertEqual(html, EXP_HTML.format(aid=aid))
+
+        # verifying the new MANIFEST.txt
+        mfp = join(res["files"]["directory"][0]["filepath"], "MANIFEST.txt")
+        self.assertTrue(exists(f"{mfp}"))
+        with open(mfp, "r") as f:
+            obs = f.readlines()
+        self.assertCountEqual(obs, EXP_MANIFEST)
 
 
 EXP_HTML = (
-    '<a href="./{aid}/test_data/folder_a" type="folder" target="_blank">'
-    "test_data/folder_a</a><br/>\n"
-    '<a href="./{aid}/test_data/folder_a/folder_b/folder_c" type="folder" '
-    'target="_blank">test_data/folder_a/folder_b/folder_c</a><br/>\n'
-    '<a href="./{aid}/test_data/file_2" type="file" target="_blank">'
-    "test_data/file_2</a><br/>\n"
-    '<a href="./{aid}/test_data/file_1" type="file" target="_blank">'
-    "test_data/file_1</a><br/>\n"
-    '<a href="./{aid}/test_data/test_data" type="folder" target="_blank">'
-    "test_data/test_data</a><br/>\n"
-    '<a href="./{aid}/test_data/test_data/folder_a/folder_b" type="folder" '
-    'target="_blank">test_data/test_data/folder_a/folder_b</a><br/>\n'
-    '<a href="./{aid}/test_data/test_data/folder_a/folder_b/folder_c/file_c" '
-    'type="file" target="_blank">test_data/test_data/folder_a/folder_b/'
-    "folder_c/file_c</a><br/>\n"
-    '<a href="./{aid}/test_data/test_data/folder_a/file_a" type="file" '
-    'target="_blank">test_data/test_data/folder_a/file_a</a>'
+    '<a href="./{aid}/result/MANIFEST.txt" type="file" target="_blank">'
+    "result/MANIFEST.txt</a><br/>\n"
+    '<a href="./{aid}/result/file_1" type="file" target="_blank">'
+    "result/file_1</a><br/>\n"
+    '<a href="./{aid}/result/file_2" type="file" target="_blank">'
+    "result/file_2</a><br/>\n"
+    '<a href="./{aid}/result/folder_a/folder_b/index.html" type="file" '
+    'target="_blank">result/folder_a/folder_b/index.html</a><br/>\n'
+    '<a href="./{aid}/result/folder_1/index.html" type="file" '
+    'target="_blank">result/folder_1/index.html</a>'
 )
+EXP_MANIFEST = [
+    " result/\n",
+    "|-- file_1\n",
+    "|-- file_2\n",
+    "|-- folder_a/\n",
+    "|--|-- file_a\n",
+    "|--|-- folder_b/\n",
+    "|--|--|-- index.html\n",
+    "|--|--|-- folder_c/\n",
+    "|--|--|--|-- file_c\n",
+    "|-- folder_1/\n",
+    "|--|-- index.html",
+]
 
 
 if __name__ == "__main__":
