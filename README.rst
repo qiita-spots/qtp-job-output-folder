@@ -1,5 +1,5 @@
 Job Output Folder Data Type Plugin
-==================================
+================================== 
 
 The goal of this Qiita type plugin is to validate and summarize any kind of folder output.
 
