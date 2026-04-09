@@ -99,10 +99,8 @@ class SummaryTests(PluginTestCase):
         self.maxDiff = None
         # check list of entries, as order might differ
         self.assertCountEqual(
-            '\n'.join(html.split('<br/>\n')),
-            '\n'.join(
-                EXP_HTML.format(aid=aid, dir=self.exp_dirname).split('<br/>\n')
-            )
+            html.split('<br/>\n'),
+            EXP_HTML.format(aid=aid, dir=self.exp_dirname).split('<br/>\n')
         )
 
         # verifying the new MANIFEST.txt
