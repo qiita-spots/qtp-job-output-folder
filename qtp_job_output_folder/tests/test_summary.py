@@ -96,7 +96,7 @@ class SummaryTests(PluginTestCase):
         with open(html_fp) as html_f:
             html = html_f.read()
 
-        self.assertEqual(html, EXP_HTML.format(aid=aid))
+        self.assertEqual(html, EXP_HTML.format(aid=aid, dir=self.exp_dirname))
 
         # verifying the new MANIFEST.txt
         mfp = join(res["files"]["directory"][0]["filepath"], "MANIFEST.txt")
@@ -107,16 +107,16 @@ class SummaryTests(PluginTestCase):
 
 
 EXP_HTML = (
-    '<a href="./{aid}/result/MANIFEST.txt" type="file" target="_blank">'
-    "result/MANIFEST.txt</a><br/>\n"
-    '<a href="./{aid}/result/file_1" type="file" target="_blank">'
-    "result/file_1</a><br/>\n"
-    '<a href="./{aid}/result/file_2" type="file" target="_blank">'
-    "result/file_2</a><br/>\n"
-    '<a href="./{aid}/result/folder_a/folder_b/index.html" type="file" '
-    'target="_blank">result/folder_a/folder_b/index.html</a><br/>\n'
-    '<a href="./{aid}/result/folder_1/index.html" type="file" '
-    'target="_blank">result/folder_1/index.html</a>'
+    '<a href="./{aid}/{dir}/MANIFEST.txt" type="file" target="_blank">'
+    "{dir}/MANIFEST.txt</a><br/>\n"
+    '<a href="./{aid}/{dir}/file_1" type="file" target="_blank">'
+    "{dir}/file_1</a><br/>\n"
+    '<a href="./{aid}/{dir}/file_2" type="file" target="_blank">'
+    "{dir}/file_2</a><br/>\n"
+    '<a href="./{aid}/{dir}/folder_a/folder_b/index.html" type="file" '
+    'target="_blank">{dir}/folder_a/folder_b/index.html</a><br/>\n'
+    '<a href="./{aid}/{dir}/folder_1/index.html" type="file" '
+    'target="_blank">{dir}/folder_1/index.html</a>'
 )
 EXP_MANIFEST = [
     " result/\n",
