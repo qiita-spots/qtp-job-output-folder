@@ -6,11 +6,10 @@
 # The full license is in the file LICENSE, distributed with this software.
 # -----------------------------------------------------------------------------
 
-from qiita_client import QiitaTypePlugin, QiitaArtifactType
+from qiita_client import QiitaArtifactType, QiitaTypePlugin
 
-from .validate import validate
 from .summary import generate_html_summary
-
+from .validate import validate
 
 __version__ = "2021.08"
 
@@ -20,11 +19,22 @@ artifact_types = [
     # QiitaArtifactType(name, description, can_be_submitted_to_ebi,
     #                   can_be_submitted_to_vamps, is_user_uploadable,
     #                   filepath_types):
-    QiitaArtifactType('job-output-folder', 'Job Output Folder', False, False,
-                      False, [('directory', True)]),
+    QiitaArtifactType(
+        "job-output-folder",
+        "Job Output Folder",
+        False,
+        False,
+        False,
+        [("directory", True)],
+    ),
 ]
 
 # Initialize the plugin
-plugin = QiitaTypePlugin('qtp-job-output-folder', __version__,
-                         'job-output-folder artifact types plugin',
-                         validate, generate_html_summary, artifact_types)
+plugin = QiitaTypePlugin(
+    "qtp-job-output-folder",
+    __version__,
+    "job-output-folder artifact types plugin",
+    validate,
+    generate_html_summary,
+    artifact_types,
+)
