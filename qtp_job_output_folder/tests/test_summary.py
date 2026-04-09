@@ -110,8 +110,10 @@ class SummaryTests(PluginTestCase):
         with open(mfp, "r") as f:
             obs = f.readlines()
         self.assertCountEqual(
-            obs,
-            list(map(lambda x: x.format(dir=self.exp_dirname), EXP_MANIFEST))
+            list(map(str.strip, obs)),
+            list(map(
+                lambda x: x.format(dir=self.exp_dirname).strip(),
+                EXP_MANIFEST))
         )
 
 
