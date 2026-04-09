@@ -96,7 +96,13 @@ class SummaryTests(PluginTestCase):
         with open(html_fp) as html_f:
             html = html_f.read()
 
-        self.assertEqual(html, EXP_HTML.format(aid=aid, dir=self.exp_dirname))
+        # check list of entries, as order might differ
+        self.assertCountEqual(
+            '\n'.join(html.split('<br/>\n')),
+            '\n'.join(
+                EXP_HTML.format(aid=aid, dir=self.exp_dirname).split('<br/>\n')
+            )
+        )
 
         # verifying the new MANIFEST.txt
         mfp = join(res["files"]["directory"][0]["filepath"], "MANIFEST.txt")
