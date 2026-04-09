@@ -122,7 +122,7 @@ EXP_HTML = (
     'target="_blank">{dir}/folder_1/index.html</a>'
 )
 EXP_MANIFEST = [
-    " {dir}}/\n",
+    " {dir}/\n",
     "|-- file_1\n",
     "|-- file_2\n",
     "|-- folder_a/\n",
