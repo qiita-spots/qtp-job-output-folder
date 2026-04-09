@@ -97,6 +97,8 @@ class SummaryTests(PluginTestCase):
             html = html_f.read()
 
         self.maxDiff = None
+        import sys
+        print("html: >%s<\n\nEXP_HTML: >%s<" % (html, EXP_HTML), file=sys.stderr)
         # check list of entries, as order might differ
         self.assertCountEqual(
             html.split('<br/>\n'),
