@@ -96,6 +96,7 @@ class SummaryTests(PluginTestCase):
         with open(html_fp) as html_f:
             html = html_f.read()
 
+        self.maxDiff = None
         # check list of entries, as order might differ
         self.assertCountEqual(
             '\n'.join(html.split('<br/>\n')),
