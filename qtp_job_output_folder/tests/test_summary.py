@@ -103,7 +103,10 @@ class SummaryTests(PluginTestCase):
         self.assertTrue(exists(f"{mfp}"))
         with open(mfp, "r") as f:
             obs = f.readlines()
-        self.assertCountEqual(obs, EXP_MANIFEST.format(dir=self.exp_dirname))
+        self.assertCountEqual(
+            obs,
+            list(map(lambda x: x.format(dir=self.exp_dirname), EXP_MANIFEST))
+        )
 
 
 EXP_HTML = (
