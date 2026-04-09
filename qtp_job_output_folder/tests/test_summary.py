@@ -103,7 +103,7 @@ class SummaryTests(PluginTestCase):
         self.assertTrue(exists(f"{mfp}"))
         with open(mfp, "r") as f:
             obs = f.readlines()
-        self.assertCountEqual(obs, EXP_MANIFEST)
+        self.assertCountEqual(obs, EXP_MANIFEST.format(dir=self.exp_dirname))
 
 
 EXP_HTML = (
@@ -119,7 +119,7 @@ EXP_HTML = (
     'target="_blank">{dir}/folder_1/index.html</a>'
 )
 EXP_MANIFEST = [
-    " result/\n",
+    " {dir}}/\n",
     "|-- file_1\n",
     "|-- file_2\n",
     "|-- folder_a/\n",
