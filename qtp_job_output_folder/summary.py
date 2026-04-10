@@ -9,7 +9,9 @@
 from json import dumps
 from os import sep, walk
 from os.path import basename, dirname, exists, isdir, join
+import logging
 
+logger = logging.getLogger(__name__)
 
 def _folder_listing(folder):
     index, manifest = [], []
@@ -35,7 +37,7 @@ def _folder_listing(folder):
         manifest.append(f"{space} {basename(dpath)}/")
         for filename in files:
             manifest.append(f"{space}{separator} {filename}")
-
+    logger.debug("_folder_listing(folder=%s): index=%s, manifest=%s" % (folder, index, manifest))
     return index, manifest
 
 
@@ -51,8 +53,7 @@ def _generate_html_summary(jid, folder, out_dir):
         link = '<a href=".%s" type="%s" target="_blank">%s</a>'
         index, manifest = _folder_listing(folder)
 
-        import sys
-        print("\nSTEFAN summary: write manifest to file %s\n" % manifest_fp, file=sys.stderr)
+        logger.debug("\nSTEFAN summary: write manifest to file %s\n" % manifest_fp)
         with open(manifest_fp, "w") as of:
             of.write("\n".join(manifest))
 
@@ -67,7 +68,7 @@ def _generate_html_summary(jid, folder, out_dir):
 
     # we could add a support folder for the summary
     viz_fp = None
-
+    logger.debug("_generate_html_summary(jid, folder=%s, out_dir=%s) index_fp=%s, viz_fp=%s\n" % (folder, out_dir, index_fp, viz_fp))
     return index_fp, viz_fp
 
 
@@ -111,8 +112,7 @@ def generate_html_summary(qclient, job_id, parameters, out_dir):
     error_msg = ""
     try:
         fps = dumps({"html": index_fp, "dir": viz_fp})
-        import sys
-        print("STEFAN voir patch: value (type=%s)=%s" % (type(fps), fps), file=sys.stderr)
+        logger.debug("STEFAN voir patch: value (type=%s)=%s" % (type(fps), fps))
         qclient.patch(qclient_url, "add", "/html_summary/", value=fps)
     except Exception as e:
         success = False
