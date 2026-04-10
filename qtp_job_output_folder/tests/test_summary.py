@@ -57,6 +57,7 @@ class SummaryTests(PluginTestCase):
             "name": "A name",
             "data_type": "Job Output Folder",
         }
+
         aid = self.qclient.post("/apitest/artifact/", data=data)["artifact"]
         parameters = {"input_data": aid}
         data = {
@@ -68,10 +69,16 @@ class SummaryTests(PluginTestCase):
         }
         job_id = self.qclient.post("/apitest/processing_job/", data=data)["job"]
 
+        import sys
+        from glob import glob
+        print("PRE generate_html_summary:\n%s=%s\n\n%s=%s\n" % (self.out_dir, list(glob(self.out_dir + "/**/*", recursive=True)),
+                                                                self.source_dir, list(glob(self.source_dir + "/**/*", recursive=True))), file=sys.stderr)
         # Run the test
         obs_success, obs_ainfo, obs_error = generate_html_summary(
             self.qclient, job_id, parameters, self.out_dir
         )
+        print("POST generate_html_summary:\n%s=%s\n\n%s=%s\n" % (self.out_dir, list(glob(self.out_dir + "/**/*", recursive=True)),
+                                                                 self.source_dir, list(glob(self.source_dir + "/**/*", recursive=True))), file=sys.stderr)
         fp_target_dir = '%s/%s' % (self.source_dir.split(
             '/%s/' % self.mountpoint)[0], atype)
         #self._clean_up_remote_files.append(fp_target_dir)
@@ -84,7 +91,7 @@ class SummaryTests(PluginTestCase):
 
         # asserting content of html
         res = self.qclient.get("/qiita_db/artifacts/%s/" % aid)
-        import sys
+        
         print('STEFAN res=>%s<\n' % res, file=sys.stderr)
         # cleaning artifact files, to avoid errors
         [
