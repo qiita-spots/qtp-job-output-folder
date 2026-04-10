@@ -51,6 +51,8 @@ def _generate_html_summary(jid, folder, out_dir):
         link = '<a href=".%s" type="%s" target="_blank">%s</a>'
         index, manifest = _folder_listing(folder)
 
+        import sys
+        print("\nSTEFAN summary: write manifest to file %s\n" % manifest_fp, file=sys.stderr)
         with open(manifest_fp, "w") as of:
             of.write("\n".join(manifest))
 
@@ -109,6 +111,8 @@ def generate_html_summary(qclient, job_id, parameters, out_dir):
     error_msg = ""
     try:
         fps = dumps({"html": index_fp, "dir": viz_fp})
+        import sys
+        print("STEFAN voir patch: value (type=%s)=%s" % (type(fps), fps), file=sys.stderr)
         qclient.patch(qclient_url, "add", "/html_summary/", value=fps)
     except Exception as e:
         success = False
