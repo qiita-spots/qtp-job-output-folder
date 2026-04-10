@@ -84,6 +84,8 @@ class SummaryTests(PluginTestCase):
 
         # asserting content of html
         res = self.qclient.get("/qiita_db/artifacts/%s/" % aid)
+        import sys
+        print('STEFAN res=>%s<\n' % res, file=sys.stderr)
         # cleaning artifact files, to avoid errors
         [
             self._clean_up_files.extend([ff["filepath"]])
@@ -103,7 +105,7 @@ class SummaryTests(PluginTestCase):
         with open(mfp, "r") as f:
             obs = f.readlines()
         # check list of entries, as order might differ
-        print("manifest\nobs=>%s<\nexp=>%s<\n" % ('\n'.join(obs), '\n'.join(EXP_MANIFEST)))
+        print("manifest\nobs=>%s<\nexp=>%s<\n" % ('\n'.join(obs), '\n'.join(EXP_MANIFEST)), file=sys.stderr)
         self.assertTrue(exists(f"{mfp}"))
         
         self.assertCountEqual(
