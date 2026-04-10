@@ -102,12 +102,12 @@ class SummaryTests(PluginTestCase):
 
         # verifying the new MANIFEST.txt
         mfp = join(res["files"]["directory"][0]["filepath"], "MANIFEST.txt")
-        self.assertTrue(exists(f"{mfp}"))
         with open(mfp, "r") as f:
             obs = f.readlines()
         # check list of entries, as order might differ
         print("manifest\nobs=>%s<\nexp=>%s<\n" % ('\n'.join(obs), '\n'.join(EXP_MANIFEST)))
-
+        self.assertTrue(exists(f"{mfp}"))
+        
         self.assertCountEqual(
             html.split('<br/>\n'),
             EXP_HTML.format(aid=aid, dir=self.exp_dirname).split('<br/>\n')
