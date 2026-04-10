@@ -90,9 +90,7 @@ class SummaryTests(PluginTestCase):
             for f in res["files"].values()
             for ff in f
         ]
-        html_fp = self.qclient.fetch_file_from_central(
-            res["files"]["html_summary"][0]["filepath"]
-        )
+        html_fp = res["files"]["html_summary"][0]["filepath"]
         with open(html_fp) as html_f:
             html = html_f.read()
 
