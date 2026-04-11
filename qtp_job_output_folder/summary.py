@@ -65,6 +65,7 @@ def _generate_html_summary(jid, folder, out_dir):
 
     # we could add a support folder for the summary
     viz_fp = None
+
     return index_fp, viz_fp
 
 
@@ -96,13 +97,13 @@ def generate_html_summary(qclient, job_id, parameters, out_dir):
     artifact_id = parameters["input_data"]
     qclient_url = "/qiita_db/artifacts/%s/" % artifact_id
     artifact_info = qclient.get(qclient_url)
-    
+
     # [0] there is only one directory
     folder = artifact_info["files"]["directory"][0]["filepath"]
 
     # 2. Generate summary
     index_fp, viz_fp = _generate_html_summary(job_id, folder, out_dir)
-    
+
     # Step 3: add the new file to the artifact using REST api
     success = True
     error_msg = ""
