@@ -13,7 +13,6 @@ from os.path import abspath, dirname, exists, isdir, join
 from shutil import copytree, rmtree
 from tempfile import mkdtemp
 from unittest import main
-from glob import glob
 
 from qiita_client.testing import PluginTestCase
 
@@ -37,7 +36,6 @@ class SummaryTests(PluginTestCase):
         copytree(source, self.source_dir)
         self.qclient.push_file_to_central(self.source_dir)
         self._clean_up_files = [self.out_dir, dirname(self.source_dir)]
-        #self._clean_up_remote_files = []
 
     def tearDown(self):
         for fp in self._clean_up_files:
@@ -46,8 +44,6 @@ class SummaryTests(PluginTestCase):
                     rmtree(fp)
                 else:
                     remove(fp)
-        #for fp in self._clean_up_remote_files:
-        #    self.qclient.delete_file_from_central(fp)
 
     def test_summary(self):
         files = [(self.source_dir, "directory")]
@@ -70,17 +66,12 @@ class SummaryTests(PluginTestCase):
         }
         job_id = self.qclient.post("/apitest/processing_job/", data=data)["job"]
 
-        with open("/debug/stefan.log", "a") as f:
-            f.write("test_summary, pre 'generate_html_summary' (job_id=%s, parameters=%s, self.out_dir=%s), glob@tmp=%s, glob@qiita-data=%s, glob@folder=%s\n" % (job_id, parameters, self.out_dir, '\n'.join(glob("/tmp/**/*", recursive=True)), '\n'.join(glob("/qiita_data/**/*", recursive=True)), '\n'.join(glob(self.out_dir+"/**/*", recursive=True))))
         # Run the test
         obs_success, obs_ainfo, obs_error = generate_html_summary(
             self.qclient, job_id, parameters, self.out_dir
         )
-        with open("/debug/stefan.log", "a") as f:
-            f.write("test_summary, post 'generate_html_summary' (job_id=%s, parameters=%s, self.out_dir=%s), glob@tmp=%s, glob@qiita-data=%s, glob@folder=%s\n" % (job_id, parameters, self.out_dir, '\n'.join(glob("/tmp/**/*", recursive=True)), '\n'.join(glob("/qiita_data/**/*", recursive=True)), '\n'.join(glob(self.out_dir+"/**/*", recursive=True))))
         fp_target_dir = '%s/%s' % (self.source_dir.split(
             '/%s/' % self.mountpoint)[0], atype)
-        #self._clean_up_remote_files.append(fp_target_dir)
         self._clean_up_files.append(fp_target_dir)
 
         # asserting reply
@@ -91,8 +82,6 @@ class SummaryTests(PluginTestCase):
         # asserting content of html
         res = self.qclient.get("/qiita_db/artifacts/%s/" % aid)
         
-        with open("/debug/stefan.log", "a") as f:
-            f.write("STEFAN res=>%s<\n" % res)
         # cleaning artifact files, to avoid errors
         [
             self._clean_up_files.extend([ff["filepath"]])
@@ -103,23 +92,17 @@ class SummaryTests(PluginTestCase):
         with open(html_fp) as html_f:
             html = html_f.read()
 
-        self.maxDiff = None
-        with open("/debug/stefan.log", "a") as f:
-            f.write("html: >%s<\n\nEXP_HTML: >%s<" % (html, EXP_HTML))
-
-        # verifying the new MANIFEST.txt
-        mfp = join(res["files"]["directory"][0]["filepath"], "MANIFEST.txt")
-        with open(mfp, "r") as f:
-            obs = f.readlines()
-        # check list of entries, as order might differ
-        with open("/debug/stefan.log", "a") as f:
-            f.write("manifest\nobs=>%s<\nexp=>%s<\n" % ('\n'.join(obs), '\n'.join(EXP_MANIFEST)))
-        self.assertTrue(exists(f"{mfp}"))
-        
         self.assertCountEqual(
             html.split('<br/>\n'),
             EXP_HTML.format(aid=aid, dir=self.exp_dirname).split('<br/>\n')
         )
+
+        # verifying the new MANIFEST.txt
+        mfp = join(res["files"]["directory"][0]["filepath"], "MANIFEST.txt")
+        self.assertTrue(exists(f"{mfp}"))
+        with open(mfp, "r") as f:
+            obs = f.readlines()
+        # check list of entries, as order might differ
         self.assertCountEqual(
             list(map(str.strip, obs)),
             list(map(

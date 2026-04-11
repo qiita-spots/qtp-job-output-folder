@@ -35,7 +35,6 @@ class PluginTests(PluginTestCase):
         copytree(source, self.source_dir)
         self.qclient.push_file_to_central(self.source_dir)
         self._clean_up_files = [self.out_dir, dirname(self.source_dir)]
-        #self._clean_up_remote_files = []
 
     def tearDown(self):
         for fp in self._clean_up_files:
@@ -44,8 +43,6 @@ class PluginTests(PluginTestCase):
                     rmtree(fp)
                 else:
                     remove(fp)
-        #for fp in self._clean_up_remote_files:
-        #    self.qclient.delete_file_from_central(fp)
 
     def _wait_job(self, job_id):
         for i in range(20):
@@ -77,7 +74,6 @@ class PluginTests(PluginTestCase):
         plugin("https://localhost:21174", job_id, self.out_dir)
         fp_target_dir = '%s/%s' % (self.source_dir.split(
             '/%s/' % self.mountpoint)[0], atype)
-        #self._clean_up_remote_files.append(fp_target_dir)
         self._clean_up_files.append(fp_target_dir)
         self._wait_job(job_id)
         obs = self.qclient.get_job_info(job_id)
@@ -102,7 +98,6 @@ class PluginTests(PluginTestCase):
         plugin("https://localhost:21174", job_id, self.out_dir)
         fp_target_dir = '%s/%s' % (self.source_dir.split(
             '/%s/' % self.mountpoint)[0], atype)
-        #self._clean_up_remote_files.append(fp_target_dir)
         self._clean_up_files.append(fp_target_dir)
         self._wait_job(job_id)
         obs = self.qclient.get_job_info(job_id)
