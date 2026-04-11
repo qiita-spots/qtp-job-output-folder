@@ -13,6 +13,7 @@ from os.path import abspath, dirname, exists, isdir, join
 from shutil import copytree, rmtree
 from tempfile import mkdtemp
 from unittest import main
+from glob import glob
 
 from qiita_client.testing import PluginTestCase
 
